@@ -64,3 +64,50 @@ def publish_batch(
     )
 
     return output_path
+
+
+def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Publish a synthetic company sentiment batch."
+    )
+    parser.add_argument(
+        "--market-date",
+        required=True,
+        type=date.fromisoformat,
+        help="Market date in YYYY-MM-DD format.",
+    )
+    parser.add_argument(
+        "--batch",
+        required=True,
+        choices=[batch.value for batch in BatchType],
+        help="Batch type to publish.",
+    )
+    parser.add_argument(
+        "--output",
+        required=True,
+        type=Path,
+        help="Directory where the published artifact will be written.",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=None,
+        help="Optional deterministic generator seed.",
+    )
+
+    args = parser.parse_args()
+
+    output_path = publish_batch(
+        market_date=args.market_date,
+        batch_type=BatchType(args.batch),
+        output_dir=args.output,
+        seed=args.seed,
+    )
+
+    print(output_path)
+
+
+if __name__ == "__main__":
+    main()
