@@ -1,0 +1,1 @@
+"""Synthetic company sentiment data vendor."""

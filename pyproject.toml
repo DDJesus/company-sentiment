@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "company-sentiment"
+version = "0.1.0"
+description = "Synthetic company sentiment data vendor"
+requires-python = ">=3.12"
+dependencies = [
+    "tzdata",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8,<10",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.setuptools.packages.find]
+include = ["company_sentiment*"]
+exclude = ["tests*"]
