@@ -1,8 +1,9 @@
 import json
 
 from dataclasses import asdict
-from datetime import date, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from company_sentiment.generator import SentimentGenerator
 from company_sentiment.models import BatchType
@@ -74,10 +75,13 @@ def main() -> None:
     )
     parser.add_argument(
         "--market-date",
-        required=True,
         type=date.fromisoformat,
-        help="Market date in YYYY-MM-DD format.",
-    )
+        default=None,
+        help=(
+            "Market date in YYYY-MM-DD format. "
+            "Defaults to the current date in America/New_York."
+            ),
+        )   
     parser.add_argument(
         "--batch",
         required=True,
@@ -99,8 +103,15 @@ def main() -> None:
 
     args = parser.parse_args()
 
+    market_date = args.market_date
+
+    if market_date is None:
+        market_date = datetime.now(
+            ZoneInfo("America/New_York")
+            ).date()
+
     output_path = publish_batch(
-        market_date=args.market_date,
+        market_date=market_date,
         batch_type=BatchType(args.batch),
         output_dir=args.output,
         seed=args.seed,
